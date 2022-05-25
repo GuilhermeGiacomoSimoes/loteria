@@ -5,14 +5,14 @@ import os.path
 import datetime
 import time
 
-token = ''
 name  = 'contest.csv'
 
 def request_contest(concurso):
-    url = 'https://apiloterias.com.br/app/resultado?loteria=megasena&token={}'.format(token)
+    #url = 'https://apiloterias.com.br/app/resultado?loteria=megasena&token={}'.format(token)
+    url ='https://loteriascaixa-api.herokuapp.com/api/mega-sena/'
 
-    if concurso is not None:
-        url += '&concurso={}'.format(concurso)
+    concurso = concurso or 'latest' 
+    url += "{}".format(concurso)
 
     r = requests.get(url)
 
@@ -49,7 +49,7 @@ def build_new_csv_contest(json):
     csv_file    = open(name, 'w')
     new_csv     = csv.writer(csv_file)
 
-    row = [ json['numero_concurso'] ]
+    row = [ json['concurso'] ]
     row.extend( json['dezenas'] )
     new_csv.writerow( row )
 
@@ -57,7 +57,7 @@ def build_new_csv_contest(json):
 def change_csv_contest(json):
     with open(name, 'a') as fd:
         writer = csv.writer(fd)
-        row = [ json['numero_concurso'] ]
+        row = [ json['concurso'] ]
         row.extend( json['dezenas'] )
         writer.writerow( row )
 
@@ -69,7 +69,7 @@ def verify_update():
         read = open(name, 'r')
         csv_reader = [ line.split() for line in read ] 
 
-        number_ultimate_contest = int(ultimate_contest['numero_concurso'])
+        number_ultimate_contest = int(ultimate_contest['concurso'])
         number_ultimate_row_csv = int(csv_reader[len(csv_reader) - 1][0].split(",")[0])
 
         if number_ultimate_contest > number_ultimate_row_csv:
@@ -79,8 +79,8 @@ def verify_update():
                 if isinstance(r, int): 
                     print('deu ruim > {}'.format(r))
                 else:
-                    if 'numero_concurso' in r:
-                        print('gravando jogo > {}'.format(r['numero_concurso']))
+                    if 'concurso' in r:
+                        print('gravando jogo > {}'.format(r['concurso']))
                         change_csv_contest(r) 
                     else:
                         if 'erro' in r:
@@ -91,7 +91,7 @@ def verify_update():
                      
                 time.sleep(5)
     else:
-        number_ultimate_contest = ultimate_contest['numero_concurso']
+        number_ultimate_contest = ultimate_contest['concurso']
         number_ultimate_row_csv = 0
 
         for n in range(number_ultimate_row_csv + 1, number_ultimate_contest + 1):
@@ -100,15 +100,13 @@ def verify_update():
             if isinstance(r, int): 
                 print('deu ruim > {}'.format(r))
             else:
-                print('gravando jogo > {}'.format(r['numero_concurso']))
+                print('gravando jogo > {}'.format(r['concurso']))
                 build_new_csv_contest(r) 
                  
             time.sleep(5)
 
 
 def suggest_numbers():
-    token = input("TOKEN: ")
-
     verify_update()
 
     read        = open(name, 'r')
