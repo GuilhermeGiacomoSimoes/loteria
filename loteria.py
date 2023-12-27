@@ -4,6 +4,8 @@ import random
 import os.path
 import datetime
 import time
+import sys
+import numpy
 
 name  = 'contest.csv'
 
@@ -113,8 +115,9 @@ def suggest_numbers():
     read        = open(name, 'r')
     contests    = [ line.split() for line in read ]
 
+    amount_second_sequence = 2 if am_num == '7' else 1
     first_sequence  = return_numbers(1, 30, 3) 
-    second_sequence = return_numbers(30, 61,  1)
+    second_sequence = return_numbers(30, 61,  amount_second_sequence)
     double          = return_double(second_sequence)
 
     while True:
@@ -125,7 +128,7 @@ def suggest_numbers():
         if verify_not_exists_number_sequence(number_sequence, contests):
             break
 
-    return number_sequence
+    return numpy.sort(number_sequence)
 
 
 def verify_not_exists_number_sequence(number_sequence, contests):
@@ -155,5 +158,9 @@ def return_numbers(start, end, amount):
                 break
 
     return numbers 
+
+am_num = 6
+if len(sys.argv) > 1:
+    am_num = sys.argv[1]
 
 print(suggest_numbers())
