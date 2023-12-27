@@ -16,7 +16,6 @@ def request_contest(concurso):
 
     r = requests.get(url)
 
-
     try:
         if r.status_code >= 200 and r.status_code < 400 and r.status_code != 204:
             return r.json()
@@ -93,7 +92,6 @@ def verify_update():
                             print('gravando jogo sem núermo')
                             change_csv_contest(r) 
                      
-                time.sleep(5)
     else:
         number_ultimate_contest = ultimate_contest['concurso']
         number_ultimate_row_csv = 0
@@ -107,7 +105,6 @@ def verify_update():
                 print('gravando jogo > {}'.format(r['concurso']))
                 build_new_csv_contest(r) 
                  
-            time.sleep(5)
 
 
 def suggest_numbers():
