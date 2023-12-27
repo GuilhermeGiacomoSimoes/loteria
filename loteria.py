@@ -9,7 +9,7 @@ name  = 'contest.csv'
 
 def request_contest(concurso):
     #url = 'https://apiloterias.com.br/app/resultado?loteria=megasena&token={}'.format(token)
-    url ='https://loteriascaixa-api.herokuapp.com/api/mega-sena/'
+    url ='https://loteriascaixa-api.herokuapp.com/api/megasena/'
 
     concurso = concurso or 'latest' 
     url += "{}".format(concurso)
