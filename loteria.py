@@ -16,10 +16,14 @@ def request_contest(concurso):
 
     r = requests.get(url)
 
-    if r.status_code < 400:
-        return r.json()
-    else:
-        return r.status_code
+
+    try:
+        if r.status_code >= 200 and r.status_code < 400 and r.status_code != 204:
+            return r.json()
+        else:
+            return r.status_code
+    except:
+        return 500
 
 
 def return_double(out):
